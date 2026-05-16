@@ -1,7 +1,7 @@
-.venv
+.venv/
 .env
 __pycache__/
+*.pyc
 .pytest_cache/
 .idea/
 desktop.ini
-Thumbs.db
