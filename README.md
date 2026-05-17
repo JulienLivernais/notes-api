@@ -110,51 +110,39 @@ SETUP
 
 ADMIN ACCOUNT 
 ----------
-User notes are private by design. 
-Admins can manage user accounts but cannot access note content.
+User notes are private by design. Admins can manage user accounts but cannot access note content.
 
 ⚠️ These are demo credentials for portfolio review only.
-- SUPERADMIN_EMAIL=admin123@email.com
-- SUPERADMIN_PASSWORD=test456
+- SUPERADMIN_EMAIL=admin123@email.com / SUPERADMIN_PASSWORD=test456
+- To create the admin account run: python -m scripts.create_admin. Then login via POST /auth/login to get a JWT token.
 
-- To create the admin account run: python -m scripts.create_admin
-- Then login via POST /auth/login to get a JWT token.
-
-Regular user: register via POST /auth/register
-
-***
-
-python -m scripts.create_admin
-        ↓
-Admin account created in DB with is_admin=True
-        ↓
-Admin logs in → /auth/login → gets JWT token
-        ↓
-Admin sends token with requests to /admin/ endpoints
-        ↓
-get_current_admin checks is_admin=True → access granted
-        ↓
-Regular users hit /admin/ → 403 Forbidden
-
-***
+REGULAR USER
+----------
+Register via POST /auth/register
 
 ROADMAP
 ----------
-* Phase 1 - MVP (completed)
+Phase 1 - MVP (completed)
 * DB connection
 * User model
 * Register / login (JWT)
 * Create / read notes
 
-* Phase 2 - Notes management (completed)
+Phase 2 - Notes management (completed)
 * Update / delete notes
 * User can only access own notes
 
-* Phase 3 - Auth (completed)
+Phase 3 - Auth (completed)
 * JWT token expiration
 * OAuth2 password flow
 
-* Phase 5 - Testing (not started)
+Phase 4 - Testing (not started)
+* Unit tests with Pytest
+* Test authentication endpoints
+* Test notes CRUD
+* Test admin endpoints
+
+Phase 5 - Testing (not started)
 * Unit tests with Pytest
 * Test authentication endpoints
 * Test notes CRUD
