@@ -1,9 +1,11 @@
 from fastapi import FastAPI
-from app.routers import auth, notes, users
+from app.routers import auth, notes, users, admin
 
 app = FastAPI()
 
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(notes.router)
+app.include_router(admin.router)
+
 

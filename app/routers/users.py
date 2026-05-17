@@ -14,7 +14,7 @@ def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-@router.put("/me", response_model=UserResponse)
+@router.patch("/me", response_model=UserResponse)
 def update_me(updated: UserUpdate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if updated.username:
         current_user.username = updated.username
