@@ -90,6 +90,11 @@ ARCHITECTURE APPLICATION
       * user_repository.py
 * scripts/
    * create_admin.py
+* tests/
+   * conftest.py
+   * test_admin.py
+   * test_auth.py
+   * test_notes.py
 * alembic/
 * .env.example
 * .gitignore
@@ -102,7 +107,7 @@ SETUP
 2. Create a virtual environment and activate it
 3. Install dependencies: pip install -r requirements.txt
 4. Copy .env.example to .env and fill in the values
-5. Create the database: notesdb
+5. Create the PostgreSQL database: notesdb
 6. Run migrations: alembic upgrade head
 7. Create admin account: python -m scripts.create_admin
 8. Start the server: uvicorn app.main:app --reload
@@ -113,8 +118,12 @@ ADMIN ACCOUNT
 User notes are private by design. Admins can manage user accounts but cannot access note content.
 
 ⚠️ These are demo credentials for portfolio review only.
-- SUPERADMIN_EMAIL=admin123@email.com / SUPERADMIN_PASSWORD=test456
-- To create the admin account run: python -m scripts.create_admin. Then login via POST /auth/login to get a JWT token.
+
+- SUPERADMIN_EMAIL=admin123@email.com 
+- SUPERADMIN_PASSWORD=test456
+
+- Run python -m scripts.create_admin to create the account.
+- Then login via POST /auth/login to get a JWT token.
 
 REGULAR USER
 ----------
@@ -136,13 +145,11 @@ Phase 3 - Auth (completed)
 * JWT token expiration
 * OAuth2 password flow
 
-Phase 4 - Testing (not started)
-* Unit tests with Pytest
-* Test authentication endpoints
-* Test notes CRUD
-* Test admin endpoints
+Phase 4 - Admin (completed)
+* Admin role
+* Admin endpoints
 
-Phase 5 - Testing (not started)
+Phase 5 - Testing (completed)
 * Unit tests with Pytest
 * Test authentication endpoints
 * Test notes CRUD
