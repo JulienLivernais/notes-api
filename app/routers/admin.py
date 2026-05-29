@@ -13,12 +13,14 @@ from app.schemas.users import UserResponse
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
+
 @router.get("/users", response_model=list[UserResponse])
 def list_all_users(
         db: Session = Depends(get_db),
         current_admin=Depends(get_current_admin)
 ):
     return get_all_users(db)
+
 
 @router.get("/users/by-email", response_model=UserResponse)
 def find_by_email(
@@ -28,8 +30,9 @@ def find_by_email(
 ):
     user = get_user_by_email(db, email)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user
+
 
 @router.get("/users/by-username", response_model=UserResponse)
 def find_by_username(
@@ -39,8 +42,9 @@ def find_by_username(
 ):
     user = get_user_by_username(db, username)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user
+
 
 @router.get("/users/{user_id}", response_model=UserResponse)
 def find_by_id(
@@ -50,8 +54,9 @@ def find_by_id(
 ):
     user = get_user_by_id(db, user_id)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user
+
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_user(
@@ -61,4 +66,5 @@ def remove_user(
 ):
     success = delete_user(db, user_id)
     if not success:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
