@@ -2,14 +2,17 @@ from app.core.database import SessionLocal
 from app.core.security import hash_password
 from app.core.config import settings
 from app.models.users import User
-from app.models import notes
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def create_admin():
     db = SessionLocal()
 
     existing = db.query(User).filter(User.email == settings.SUPERADMIN_EMAIL).first()
     if existing:
-        print("Admin already exists!")
+        logger.info("Admin already exists!")
         return
 
     admin = User(
@@ -20,7 +23,7 @@ def create_admin():
     )
     db.add(admin)
     db.commit()
-    print("Admin created successfully!")
+    logger.info("Admin created successfully!")
     db.close()
 
 
