@@ -1,7 +1,8 @@
+from app.models.notes import Note
+from app.models.users import User
 from app.core.database import SessionLocal
 from app.core.security import hash_password
 from app.core.config import settings
-from app.models.users import User
 import logging
 
 logger = logging.getLogger(__name__)

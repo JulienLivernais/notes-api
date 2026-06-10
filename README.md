@@ -21,6 +21,7 @@ STACK
 * Pydantic
 * JWT
 * OAuth2
+* Docker
 
 DATABASE
 ----------
@@ -99,9 +100,11 @@ ARCHITECTURE APPLICATION
 * .env.example
 * .gitignore
 * requirements.txt
+* Dockerfile
+* docker-compose.yml
 * README.md
 
-SETUP
+SETUP IN LOCAL 
 ----------
 1. Clone the repository
 2. Create a virtual environment and activate it
@@ -113,15 +116,26 @@ SETUP
 8. Start the server: uvicorn app.main:app --reload
 9. Open API docs: http://localhost:8000/docs
 
+SETUP WITH DOCKER                                                    ← added
+----------
+1. Clone the repository git clone https://github.com/JulienLivernais/notes-api
+2. Navigate to the project: cd notes-api
+3. Copy the environment file: .env.example .env
+4. Build and start the containers: docker compose up --build
+5. Run database migrations: docker compose exec app alembic upgrade head
+6. Create the admin account: docker compose exec app python -m scripts.create_admin
+7. Open API docs: http://localhost:8000/docs
+8. Stop the containers when done: docker compose down
+
 ADMIN ACCOUNT 
 ----------
 User notes are private by design. Admins can manage user accounts but cannot access note content.
 
 ⚠️ These are demo credentials for portfolio review only.
-
 - SUPERADMIN_EMAIL=admin123@email.com 
 - SUPERADMIN_PASSWORD=test456
 
+Create the admin account: 
 - Run python -m scripts.create_admin to create the account.
 - Then login via POST /auth/login to get a JWT token.
 
@@ -131,29 +145,35 @@ Register via POST /auth/register
 
 ROADMAP
 ----------
-Phase 1 - MVP (completed)
+Phase 1 - MVP
 * DB connection
 * User model
 * Register / login (JWT)
 * Create / read notes
 
-Phase 2 - Notes management (completed)
+Phase 2 - Notes management
 * Update / delete notes
 * User can only access own notes
 
-Phase 3 - Auth (completed)
+Phase 3 - Auth
 * JWT token expiration
 * OAuth2 password flow
 
-Phase 4 - Admin (completed)
+Phase 4 - Admin
 * Admin role
 * Admin endpoints
 
-Phase 5 - Testing (completed)
+Phase 5 - Testing
 * Unit tests with Pytest
 * Test authentication endpoints
 * Test notes CRUD
 * Test admin endpoints
+
+Phase 6 - Docker
+* Dockerized with Docker Compose
+* PostgreSQL in a separate container
+* Persistent data with volumes
+* Custom network between containers
 
 NOTES
 ----------
