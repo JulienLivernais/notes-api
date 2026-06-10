@@ -1,4 +1,3 @@
-from fastapi.testclient import TestClient
 
 def test_register(client):
     response = client.post("/auth/register", json={

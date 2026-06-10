@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from app.core.security import hash_password
 from app.models.users import User
+from tests.conftest import TestingSessionLocal
 
 
 def register_and_login(client: TestClient, email: str, username: str) -> str:
@@ -17,11 +18,6 @@ def register_and_login(client: TestClient, email: str, username: str) -> str:
 
 
 def create_admin(client: TestClient) -> str:
-    from app.core.database import SessionLocal
-    from sqlalchemy.orm import Session
-
-    # use the test database session directly
-    from tests.conftest import TestingSessionLocal
     db = TestingSessionLocal()
     admin = User(
         username="admin",
