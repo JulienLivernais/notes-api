@@ -116,7 +116,7 @@ SETUP IN LOCAL
 8. Start the server: uvicorn app.main:app --reload
 9. Open API docs: http://localhost:8000/docs
 
-SETUP WITH DOCKER                                                    ← added
+SETUP WITH DOCKER
 ----------
 1. Clone the repository git clone https://github.com/JulienLivernais/notes-api
 2. Navigate to the project: cd notes-api
