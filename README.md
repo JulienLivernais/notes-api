@@ -175,8 +175,4 @@ Phase 6 - Docker
 * Persistent data with volumes
 * Custom network between containers
 
-NOTES
-----------
-This API is a portfolio project focused on backend fundamentals including
-authentication, database design, and clean architecture.
 
