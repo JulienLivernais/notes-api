@@ -2,6 +2,17 @@ NOTES API
 ----------
 A backend API for managing personal notes with JWT authentication and role-based access control.
 
+LIVE DEMO
+----------
+This API is deployed on Railway.
+Swagger UI: https://notes-api-production-d765.up.railway.app/docs
+
+⚠️ These are demo credentials for portfolio review only.
+- SUPERADMIN_EMAIL=admin123@email.com 
+- SUPERADMIN_PASSWORD=test456
+
+You can also register your own account via POST /auth/register.
+
 FEATURES
 ----------
 * Register and login with JWT authentication
@@ -131,10 +142,6 @@ ADMIN ACCOUNT
 ----------
 User notes are private by design. Admins can manage user accounts but cannot access note content.
 
-⚠️ These are demo credentials for portfolio review only.
-- SUPERADMIN_EMAIL=admin123@email.com 
-- SUPERADMIN_PASSWORD=test456
-
 Create the admin account: 
 - Run python -m scripts.create_admin to create the account.
 - Then login via POST /auth/login to get a JWT token.
@@ -175,4 +182,9 @@ Phase 6 - Docker
 * Persistent data with volumes
 * Custom network between containers
 
-
+Phase 7 - Deployment
+* Deployed on Railway
+* Managed PostgreSQL database
+* Environment variables for secrets configuration
+* Automated migrations on deploy 
+* Public Swagger UI for live testing
