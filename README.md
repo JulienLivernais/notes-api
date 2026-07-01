@@ -7,9 +7,12 @@ LIVE DEMO
 This API is deployed on Railway.
 Swagger UI: https://notes-api-production-d765.up.railway.app/docs
 
-⚠️ These are demo credentials for portfolio review only.
-- SUPERADMIN_EMAIL=admin123@email.com 
+These are demo credentials for portfolio review only.
+- SUPERADMIN_EMAIL=admin123@email.com
 - SUPERADMIN_PASSWORD=test456
+
+Connect via POST /auth/login, use SUPERADMIN_EMAIL as username.
+Click "Try it out" to test.
 
 You can also register your own account via POST /auth/register.
 
