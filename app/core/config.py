@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     SUPERADMIN_EMAIL: str
     SUPERADMIN_PASSWORD: str
 
+    GITHUB_CLIENT_ID: str
+    GITHUB_CLIENT_SECRET: str
+    GITHUB_REDIRECT_URI: str
+
 # noinspection PyArgumentList
 settings = Settings()
 
