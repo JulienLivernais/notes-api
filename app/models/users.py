@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 if TYPE_CHECKING:
     from app.models.notes import Note
+    from app.models.oauth_account import OAuthAccount
 
 
 class User(Base):
@@ -14,7 +15,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column(String(255))
+    hashed_password: Mapped[str] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc))
     is_admin: Mapped[bool] = mapped_column(default=False)
 
