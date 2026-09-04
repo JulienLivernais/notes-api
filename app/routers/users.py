@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.users import User
 from app.schemas.users import UserResponse, UserUpdate
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -21,6 +21,18 @@ def update_me(updated: UserUpdate, current_user: User = Depends(get_current_user
     if updated.email:
         current_user.email = updated.email
     if updated.password:
+        if current_user.hashed_password is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Account has no password set",
+            )
+        if not updated.current_password or not verify_password(
+            updated.current_password, current_user.hashed_password
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Current password is incorrect",
+            )
         current_user.hashed_password = hash_password(updated.password)
     db.commit()
     db.refresh(current_user)
@@ -31,3 +43,4 @@ def update_me(updated: UserUpdate, current_user: User = Depends(get_current_user
 def delete_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     db.delete(current_user)
     db.commit()
+
