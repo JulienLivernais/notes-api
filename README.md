@@ -21,6 +21,7 @@ FEATURES
 * Role-based access control (user / admin)
 * Create, read, update and delete personal notes
 * User notes are private by design (admins can manage user accounts but cannot access note content)
+* Password change requires current password verification
 
 STACK
 ----------
@@ -52,6 +53,13 @@ DATABASE
 - created_at
 - updated_at
 
+3. oauth_accounts
+- id
+- user_id
+- provider
+- provider_account_id
+- created_at
+
 SETUP IN LOCAL 
 ----------
 1. Clone the repository
@@ -61,8 +69,8 @@ SETUP IN LOCAL
 5. Create the PostgreSQL database: notesdb
 6. Run migrations: alembic upgrade head
 7. Create admin account: python -m scripts.create_admin
-8. Start the server: uvicorn app.main:app --reload
-9. Open API docs: http://localhost:8000/docs
+8. Start the server: uvicorn app.main:app --reload --port 8001
+9. Open API docs: http://localhost:8001/docs
 
 SETUP WITH DOCKER
 ----------
@@ -72,7 +80,7 @@ SETUP WITH DOCKER
 4. Build and start the containers: docker compose up --build
 5. Run database migrations: docker compose exec app alembic upgrade head
 6. Create the admin account: docker compose exec app python -m scripts.create_admin
-7. Open API docs: http://localhost:8000/docs
+7. Open API docs: http://localhost:8001/docs
 8. Stop the containers when done: docker compose down
 
 ROADMAP
@@ -83,3 +91,11 @@ ROADMAP
 * Pytest test suite
 * Dockerized with Compose
 * Deployed on Railway with managed Postgres
+* Refresh token endpoint
+
+FUTURE IMPROVEMENTS
+----------
+* GitHub OAuth login
+* CI with GitHub Actions
+
+
