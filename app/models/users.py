@@ -24,4 +24,11 @@ class User(Base):
         cascade="all, delete-orphan"
     )
 
+    oauth_accounts: Mapped[list["OAuthAccount"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+
+
+
 

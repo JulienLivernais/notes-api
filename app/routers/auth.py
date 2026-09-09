@@ -7,9 +7,12 @@ from app.models.users import User
 from app.schemas.users import UserCreate, UserResponse
 
 from urllib.parse import urlencode
-from fastapi.responses import RedirectResponse
 from app.core.config import settings
-from app.core.oauth_state import create_oauth_state
+
+from fastapi.responses import JSONResponse, RedirectResponse
+from app.core.oauth_state import create_oauth_state, verify_oauth_state
+from app.core.oauth_github import exchange_code_for_token, fetch_github_profile, generate_unique_username
+from app.models.oauth_account import OAuthAccount
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -77,3 +80,58 @@ def refresh(refresh_token: str = Body(..., embed=True)):
         "access_token": create_access_token(data={"sub": payload["sub"]}),
         "token_type": "bearer",
     }
+
+# CALLBACK GITHUB
+
+@router.get("/github/callback", include_in_schema=False)
+async def github_callback(code: str, state: str, db: Session = Depends(get_db)):
+    if not verify_oauth_state(state):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid state")
+
+    github_token = await exchange_code_for_token(code)
+    if github_token is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not exchange code")
+
+    profile = await fetch_github_profile(github_token)
+    if profile is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No verified primary email on GitHub account")
+
+    link = (
+        db.query(OAuthAccount)
+        .filter(
+            OAuthAccount.provider == "github",
+            OAuthAccount.provider_account_id == profile["provider_account_id"],
+        )
+        .first()
+    )
+
+    if link:
+        user = link.user
+    else:
+        user = db.query(User).filter(User.email == profile["email"]).first()
+        if user is None:
+            user = User(
+                username=generate_unique_username(db, profile["login"]),
+                email=profile["email"],
+                hashed_password=None,
+            )
+            db.add(user)
+            db.flush()
+        db.add(
+            OAuthAccount(
+                user_id=user.id,
+                provider="github",
+                provider_account_id=profile["provider_account_id"],
+            )
+        )
+        db.commit()
+        db.refresh(user)
+
+    return JSONResponse(
+        content={
+            "access_token": create_access_token(data={"sub": str(user.id)}),
+            "refresh_token": create_refresh_token(data={"sub": str(user.id)}),
+            "token_type": "bearer",
+        },
+        headers={"Cache-Control": "no-store"},
+    )
