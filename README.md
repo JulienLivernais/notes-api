@@ -1,5 +1,8 @@
 NOTES API
 ----------
+
+[![CI](https://github.com/JulienLivernais/notes-api/actions/workflows/ci.yml/badge.svg)](https://github.com/JulienLivernais/notes-api/actions/workflows/ci.yml)
+
 A backend API for managing personal notes with JWT authentication and role-based access control.
 
 DEPLOYMENT
