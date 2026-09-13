@@ -104,5 +104,7 @@ ROADMAP
 * GitHub OAuth login
 * CI with GitHub Actions
 
-
+FUTURE IMPROVEMENTS
+----------
+* Tests for Github OAuth 
 
