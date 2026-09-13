@@ -26,6 +26,12 @@ FEATURES
 * User notes are private by design (admins can manage user accounts but cannot access note content)
 * Password change requires current password verification
 
+GITHUB AUTHENTICATION
+----------
+* Open in a browser (creates an account on first sign in):
+https://notes-api-production-d765.up.railway.app/auth/github/login
+* Returns an access token and a refresh token as JSON
+
 STACK
 ----------
 * Python
@@ -95,10 +101,8 @@ ROADMAP
 * Dockerized with Compose
 * Deployed on Railway with managed Postgres
 * Refresh token endpoint
-
-FUTURE IMPROVEMENTS
-----------
 * GitHub OAuth login
 * CI with GitHub Actions
+
 
 
