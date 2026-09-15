@@ -113,3 +113,14 @@ def test_access_rejects_refresh_token(client):
     assert response.status_code == 401
 
 
+# GITHUB OAUTH
+# //////////////////////////
+
+def test_github_rejects_invalid_state(client):
+    response = client.get(
+        "/auth/github/callback",
+        params={"code": "fake-code", "state": "not-a-valid-state"},
+    )
+    assert response.status_code == 400
+
+
