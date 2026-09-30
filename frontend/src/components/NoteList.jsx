@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getNotes, deleteNote } from "../api";
+import NoteForm from "./NoteForm";
 
 function NoteList() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     getNotes()
@@ -14,6 +16,15 @@ function NoteList() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  function handleCreated(newNote) {
+    setNotes([newNote, ...notes]);
+  }
+
+  function handleUpdated(updatedNote) {
+    setNotes([updatedNote, ...notes.filter((note) => note.id !== updatedNote.id)]);
+    setEditingId(null);
+  }
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this note?")) {
@@ -33,6 +44,9 @@ function NoteList() {
 
   return (
     <section>
+      <h2>New note</h2>
+      <NoteForm onSave={handleCreated} />
+
       <h2>My notes</h2>
 
       {error && <p className="error">{error}</p>}
@@ -43,10 +57,21 @@ function NoteList() {
         <ul>
           {notes.map((note) => (
             <li key={note.id}>
-              <h3>{note.title}</h3>
-              <p>{note.content}</p>
-              <small>Updated {new Date(note.updated_at).toLocaleString()}</small>
-              <button onClick={() => handleDelete(note.id)}>Delete</button>
+              {editingId === note.id ? (
+                <NoteForm
+                  note={note}
+                  onSave={handleUpdated}
+                  onCancel={() => setEditingId(null)}
+                />
+              ) : (
+                <>
+                  <h3>{note.title}</h3>
+                  <p>{note.content}</p>
+                  <small>Updated {new Date(note.updated_at).toLocaleString()}</small>
+                  <button onClick={() => setEditingId(note.id)}>Edit</button>
+                  <button onClick={() => handleDelete(note.id)}>Delete</button>
+                </>
+              )}
             </li>
           ))}
         </ul>
