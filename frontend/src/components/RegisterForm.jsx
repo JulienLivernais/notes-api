@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { login, getMe } from "../api";
+import { register, login, getMe } from "../api";
 
-function LoginForm({ onLogin, onSwitch  }) {
+function RegisterForm({ onLogin, onSwitch }) {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -11,6 +12,7 @@ function LoginForm({ onLogin, onSwitch  }) {
     setError(null);
 
     try {
+      await register(username, email, password);
       await login(email, password);
       const me = await getMe();
       onLogin(me);
@@ -21,8 +23,17 @@ function LoginForm({ onLogin, onSwitch  }) {
 
   return (
     <section>
-      <h2>Log in</h2>
+      <h2>Create an account</h2>
       <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          minLength={3}
+          maxLength={30}
+          required
+        />
         <input
           type="email"
           value={email}
@@ -34,21 +45,24 @@ function LoginForm({ onLogin, onSwitch  }) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Password (8 characters min)"
+          minLength={8}
+          maxLength={128}
           required
         />
-        <button type="submit">Log in</button>
+        <button type="submit">Sign up</button>
       </form>
 
       {error && <p className="error">{error}</p>}
+
       <p>
-        No account yet?{" "}
+        Already have an account?{" "}
         <button type="button" onClick={onSwitch}>
-          Create an account
+          Log in
         </button>
       </p>
     </section>
   );
 }
 
-export default LoginForm;
+export default RegisterForm;

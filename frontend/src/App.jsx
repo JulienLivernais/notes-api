@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { getMe, logout } from "./api";
 import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 import NoteList from "./components/NoteList";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
     if (!localStorage.getItem("access_token")) {
@@ -21,6 +23,7 @@ function App() {
   function handleLogout() {
     logout();
     setUser(null);
+    setShowRegister(false);
   }
 
   if (loading) {
@@ -38,8 +41,10 @@ function App() {
           </header>
           <NoteList />
         </>
+      ) : showRegister ? (
+        <RegisterForm onLogin={setUser} onSwitch={() => setShowRegister(false)} />
       ) : (
-        <LoginForm onLogin={setUser} />
+        <LoginForm onLogin={setUser} onSwitch={() => setShowRegister(true)} />
       )}
     </div>
   );
