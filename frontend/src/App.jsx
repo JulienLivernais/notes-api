@@ -3,11 +3,13 @@ import { getMe, logout } from "./api";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import NoteList from "./components/NoteList";
+import Profile from "./components/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showRegister, setShowRegister] = useState(false);
+  const [view, setView] = useState("notes");
 
   useEffect(() => {
     if (!localStorage.getItem("access_token")) {
@@ -24,6 +26,7 @@ function App() {
     logout();
     setUser(null);
     setShowRegister(false);
+    setView("notes");
   }
 
   if (loading) {
@@ -37,9 +40,15 @@ function App() {
         <>
           <header>
             <span>Logged in as {user.username}</span>
+            <button onClick={() => setView("notes")}>Notes</button>
+            <button onClick={() => setView("profile")}>Profile</button>
             <button onClick={handleLogout}>Log out</button>
           </header>
-          <NoteList />
+          {view === "notes" ? (
+            <NoteList />
+          ) : (
+            <Profile user={user} onUpdate={setUser} onDeleted={handleLogout} />
+          )}
         </>
       ) : showRegister ? (
         <RegisterForm onLogin={setUser} onSwitch={() => setShowRegister(false)} />

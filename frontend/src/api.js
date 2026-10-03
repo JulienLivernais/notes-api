@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.DEV ? "/api" : "";
 
 // Helpers
 function authHeaders() {
@@ -57,6 +57,23 @@ export function logout() {
 // Users
 export async function getMe() {
   const response = await fetch(`${BASE_URL}/users/me`, {
+    headers: authHeaders(),
+  });
+  return handleResponse(response);
+}
+
+export async function updateMe(fields) {
+  const response = await fetch(`${BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify(fields),
+  });
+  return handleResponse(response);
+}
+
+export async function deleteMe() {
+  const response = await fetch(`${BASE_URL}/users/me`, {
+    method: "DELETE",
     headers: authHeaders(),
   });
   return handleResponse(response);
