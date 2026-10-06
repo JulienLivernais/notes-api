@@ -4,6 +4,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import NoteList from "./components/NoteList";
 import Profile from "./components/Profile";
+import AdminUsers from "./components/AdminUsers";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -42,13 +43,16 @@ function App() {
             <span>Logged in as {user.username}</span>
             <button onClick={() => setView("notes")}>Notes</button>
             <button onClick={() => setView("profile")}>Profile</button>
+            {user.is_admin && (
+              <button onClick={() => setView("admin")}>Admin</button>
+            )}
             <button onClick={handleLogout}>Log out</button>
           </header>
-          {view === "notes" ? (
-            <NoteList />
-          ) : (
+          {view === "notes" && <NoteList />}
+          {view === "profile" && (
             <Profile user={user} onUpdate={setUser} onDeleted={handleLogout} />
           )}
+          {view === "admin" && user.is_admin && <AdminUsers currentUserId={user.id} />}
         </>
       ) : showRegister ? (
         <RegisterForm onLogin={setUser} onSwitch={() => setShowRegister(false)} />

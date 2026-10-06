@@ -113,3 +113,34 @@ export async function deleteNote(id) {
   return handleResponse(response);
 }
 
+// Admin
+export async function getAllUsers() {
+  const response = await fetch(`${BASE_URL}/admin/users`, {
+    headers: authHeaders(),
+  });
+  return handleResponse(response);
+}
+
+export async function findUserByEmail(email) {
+  const params = new URLSearchParams({ email });
+  const response = await fetch(`${BASE_URL}/admin/users/by-email?${params}`, {
+    headers: authHeaders(),
+  });
+  return handleResponse(response);
+}
+
+export async function findUserByUsername(username) {
+  const params = new URLSearchParams({ username });
+  const response = await fetch(`${BASE_URL}/admin/users/by-username?${params}`, {
+    headers: authHeaders(),
+  });
+  return handleResponse(response);
+}
+
+export async function deleteUser(id) {
+  const response = await fetch(`${BASE_URL}/admin/users/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  });
+  return handleResponse(response);
+}
