@@ -25,8 +25,9 @@ function NoteForm({ note, onSave, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="editor" onSubmit={handleSubmit}>
       <input
+        className="editor-title"
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -35,18 +36,20 @@ function NoteForm({ note, onSave, onCancel }) {
         required
       />
       <textarea
+        className="editor-content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Content"
-        rows={4}
+        placeholder="Write your note..."
       />
-      <button type="submit">{note ? "Save" : "Add note"}</button>
-      {onCancel && (
-        <button type="button" onClick={onCancel}>
-          Cancel
-        </button>
-      )}
       {error && <p className="error">{error}</p>}
+      <div className="editor-actions">
+        {onCancel && (
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+        <button type="submit">{note ? "Save" : "Add note"}</button>
+      </div>
     </form>
   );
 }

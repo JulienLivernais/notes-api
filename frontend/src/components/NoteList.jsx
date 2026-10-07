@@ -6,7 +6,7 @@ function NoteList() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingId, setEditingId] = useState(null);
+  const [editingNote, setEditingNote] = useState(null);
 
   useEffect(() => {
     getNotes()
@@ -17,13 +17,14 @@ function NoteList() {
       .finally(() => setLoading(false));
   }, []);
 
-  function handleCreated(newNote) {
-    setNotes([newNote, ...notes]);
+  function handleSaved(savedNote) {
+    setNotes([savedNote, ...notes.filter((note) => note.id !== savedNote.id)]);
+    setEditingNote(null);
   }
 
-  function handleUpdated(updatedNote) {
-    setNotes([updatedNote, ...notes.filter((note) => note.id !== updatedNote.id)]);
-    setEditingId(null);
+  function handleEdit(note) {
+    setEditingNote(note);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function handleDelete(id) {
@@ -33,50 +34,52 @@ function NoteList() {
     try {
       await deleteNote(id);
       setNotes(notes.filter((note) => note.id !== id));
+      if (editingNote && editingNote.id === id) {
+        setEditingNote(null);
+      }
     } catch (err) {
       setError(err.message);
     }
   }
 
   if (loading) {
-    return <p>Loading notes...</p>;
+    return <p className="empty">Loading notes...</p>;
   }
 
   return (
-    <section>
-      <h2>New note</h2>
-      <NoteForm onSave={handleCreated} />
-
-      <h2>My notes</h2>
+    <>
+      <NoteForm
+        key={editingNote ? editingNote.id : "new"}
+        note={editingNote}
+        onSave={handleSaved}
+        onCancel={editingNote ? () => setEditingNote(null) : null}
+      />
 
       {error && <p className="error">{error}</p>}
 
+      <h2 className="section-title">My notes</h2>
+
       {notes.length === 0 ? (
-        <p>No notes yet.</p>
+        <p className="empty">No notes yet.</p>
       ) : (
-        <ul>
+        <ul className="note-grid">
           {notes.map((note) => (
-            <li key={note.id}>
-              {editingId === note.id ? (
-                <NoteForm
-                  note={note}
-                  onSave={handleUpdated}
-                  onCancel={() => setEditingId(null)}
-                />
-              ) : (
-                <>
-                  <h3>{note.title}</h3>
-                  <p>{note.content}</p>
-                  <small>Updated {new Date(note.updated_at).toLocaleString()}</small>
-                  <button onClick={() => setEditingId(note.id)}>Edit</button>
-                  <button onClick={() => handleDelete(note.id)}>Delete</button>
-                </>
-              )}
+            <li
+              key={note.id}
+              className={editingNote && editingNote.id === note.id ? "note-card editing" : "note-card"}
+            >
+              <h3>{note.title}</h3>
+              <div className="note-actions">
+                <button onClick={() => handleEdit(note)}>Edit</button>
+                <button className="danger" onClick={() => handleDelete(note.id)}>
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
       )}
-    </section>
+    </>
   );
 }
 
