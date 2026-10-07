@@ -5,6 +5,7 @@ import RegisterForm from "./components/RegisterForm";
 import NoteList from "./components/NoteList";
 import Profile from "./components/Profile";
 import AdminUsers from "./components/AdminUsers";
+import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,22 +32,30 @@ function App() {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="empty">Loading...</p>;
   }
 
   return (
     <div className="app">
-      <h1>Notes</h1>
+      <h1 className="app-title">Notes-api</h1>
       {user ? (
         <>
-          <header>
-            <span>Logged in as {user.username}</span>
-            <button onClick={() => setView("notes")}>Notes</button>
-            <button onClick={() => setView("profile")}>Profile</button>
-            {user.is_admin && (
-              <button onClick={() => setView("admin")}>Admin</button>
-            )}
-            <button onClick={handleLogout}>Log out</button>
+          <header className="topbar">
+            <span className="topbar-user">{user.username}</span>
+            <nav>
+              <button className={view === "notes" ? "active" : ""} onClick={() => setView("notes")}>
+                Notes
+              </button>
+              <button className={view === "profile" ? "active" : ""} onClick={() => setView("profile")}>
+                Profile
+              </button>
+              {user.is_admin && (
+                <button className={view === "admin" ? "active" : ""} onClick={() => setView("admin")}>
+                  Admin
+                </button>
+              )}
+              <button onClick={handleLogout}>Log out</button>
+            </nav>
           </header>
           {view === "notes" && <NoteList />}
           {view === "profile" && (
