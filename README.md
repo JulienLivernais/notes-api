@@ -3,16 +3,14 @@ NOTES API
 
 [![CI](https://github.com/JulienLivernais/notes-api/actions/workflows/ci.yml/badge.svg)](https://github.com/JulienLivernais/notes-api/actions/workflows/ci.yml)
 
-A backend API for managing personal notes with JWT authentication and role-based access control.
+A full-stack notes application: a FastAPI backend with JWT authentication and role-based access control, 
+and a React frontend.
+
 
 DEPLOYMENT
 ----------
 This API is deployed on Railway.
 Swagger UI: https://notes-api-production-d765.up.railway.app/docs
-
-These are demo credentials for portfolio review only.
-- SUPERADMIN_EMAIL=admin123@email.com
-- SUPERADMIN_PASSWORD=test456
 
 Connect via POST /auth/login (use SUPERADMIN_EMAIL as username), or create your own account via POST /auth/register.
 
@@ -25,6 +23,7 @@ FEATURES
 * Create, read, update and delete personal notes
 * User notes are private by design (admins can manage user accounts but cannot access note content)
 * Password change requires current password verification
+* Admin: list users, search by email or username, delete accounts
 
 GITHUB AUTHENTICATION
 ----------
@@ -34,6 +33,7 @@ https://notes-api-production-d765.up.railway.app/auth/github/login
 
 STACK
 ----------
+BACKEND
 * Python
 * FastAPI
 * PostgreSQL
@@ -43,6 +43,12 @@ STACK
 * JWT
 * OAuth2
 * Docker
+
+FRONTEND
+* React
+* Vite
+* JavaScript (fetch API)
+* HTML/CSS
 
 DATABASE
 ----------
@@ -103,6 +109,7 @@ ROADMAP
 * Refresh token endpoint
 * GitHub OAuth login
 * CI with GitHub Actions
+* React frontend (Vite)
 
 FUTURE IMPROVEMENTS
 ----------
