@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMe, logout } from "./api";
+import { getMe, logout, saveTokens } from "./api";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import NoteList from "./components/NoteList";
@@ -14,6 +14,14 @@ function App() {
   const [view, setView] = useState("notes");
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    const accessToken = params.get("access_token");
+    const refreshToken = params.get("refresh_token");
+    if (accessToken && refreshToken) {
+      saveTokens(accessToken, refreshToken);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+
     if (!localStorage.getItem("access_token")) {
       setLoading(false);
       return;

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { login, getMe } from "../api";
+import { login, getMe, GITHUB_LOGIN_URL } from "../api";
 
-function LoginForm({ onLogin, onSwitch  }) {
+function LoginForm({ onLogin, onSwitch }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -40,7 +40,15 @@ function LoginForm({ onLogin, onSwitch  }) {
         <button type="submit">Log in</button>
       </form>
 
+      <p className="divider">or</p>
+
+      <a className="github-button" href={GITHUB_LOGIN_URL}>
+        <img src="/GitHub_Invertocat_Black.svg" alt="" />
+        Sign in with GitHub
+      </a>
+
       {error && <p className="error">{error}</p>}
+
       <p>
         No account yet?{" "}
         <button type="button" onClick={onSwitch}>
