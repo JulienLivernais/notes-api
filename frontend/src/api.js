@@ -29,14 +29,20 @@ async function handleResponse(response) {
 }
 
 // Auth
+export const GITHUB_LOGIN_URL = `${BASE_URL}/auth/github/login`;
+
+export function saveTokens(accessToken, refreshToken) {
+  localStorage.setItem("access_token", accessToken);
+  localStorage.setItem("refresh_token", refreshToken);
+}
+
 export async function login(email, password) {
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     body: new URLSearchParams({ username: email, password }),
   });
   const data = await handleResponse(response);
-  localStorage.setItem("access_token", data.access_token);
-  localStorage.setItem("refresh_token", data.refresh_token);
+  saveTokens(data.access_token, data.refresh_token);
   return data;
 }
 
