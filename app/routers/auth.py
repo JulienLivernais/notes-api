@@ -9,7 +9,7 @@ from app.schemas.users import UserCreate, UserResponse
 from urllib.parse import urlencode
 from app.core.config import settings
 
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from app.core.oauth_state import create_oauth_state, verify_oauth_state
 from app.core.oauth_github import exchange_code_for_token, fetch_github_profile, generate_unique_username
 from app.models.oauth_account import OAuthAccount
@@ -126,11 +126,13 @@ async def github_callback(code: str, state: str, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(user)
 
-    return JSONResponse(
-        content={
-            "access_token": create_access_token(data={"sub": str(user.id)}),
-            "refresh_token": create_refresh_token(data={"sub": str(user.id)}),
-            "token_type": "bearer",
-        },
+    fragment = urlencode({
+        "access_token": create_access_token(data={"sub": str(user.id)}),
+        "refresh_token": create_refresh_token(data={"sub": str(user.id)}),
+    })
+    return RedirectResponse(
+        url=f"{settings.FRONTEND_URL}/#{fragment}",
+        status_code=302,
         headers={"Cache-Control": "no-store"},
     )
+
