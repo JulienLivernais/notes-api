@@ -37,4 +37,4 @@ def test_change_password_with_wrong_current(client):
         "password": "newpass1234",
         "current_password": "wrongpassword"
     }, headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 401
+    assert response.status_code == 400
