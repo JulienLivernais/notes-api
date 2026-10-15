@@ -6,6 +6,42 @@ function authHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+async function refreshAccessToken() {
+  const refreshToken = localStorage.getItem("refresh_token");
+  if (!refreshToken) {
+    return false;
+  }
+  const response = await fetch(`${BASE_URL}/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh_token: refreshToken }),
+  });
+  if (!response.ok) {
+    return false;
+  }
+  const data = await response.json();
+  localStorage.setItem("access_token", data.access_token);
+  return true;
+}
+
+async function authFetch(url, options = {}) {
+  const send = () =>
+    fetch(url, { ...options, headers: { ...options.headers, ...authHeaders() } });
+
+  let response = await send();
+  if (response.status === 401) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      response = await send();
+    }
+  }
+  if (response.status === 401) {
+    logout();
+    window.location.reload();
+  }
+  return response;
+}
+
 async function handleResponse(response) {
   if (!response.ok) {
     let message = `Error ${response.status}`;
@@ -62,91 +98,78 @@ export function logout() {
 
 // Users
 export async function getMe() {
-  const response = await fetch(`${BASE_URL}/users/me`, {
-    headers: authHeaders(),
-  });
+  const response = await authFetch(`${BASE_URL}/users/me`);
   return handleResponse(response);
 }
 
 export async function updateMe(fields) {
-  const response = await fetch(`${BASE_URL}/users/me`, {
+  const response = await authFetch(`${BASE_URL}/users/me`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...authHeaders() },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(fields),
   });
   return handleResponse(response);
 }
 
 export async function deleteMe() {
-  const response = await fetch(`${BASE_URL}/users/me`, {
+  const response = await authFetch(`${BASE_URL}/users/me`, {
     method: "DELETE",
-    headers: authHeaders(),
   });
   return handleResponse(response);
 }
 
 // Notes
 export async function getNotes() {
-  const response = await fetch(`${BASE_URL}/notes/`, {
-    headers: authHeaders(),
-  });
+  const response = await authFetch(`${BASE_URL}/notes/`);
   return handleResponse(response);
 }
 
 export async function createNote(title, content) {
-  const response = await fetch(`${BASE_URL}/notes/`, {
+  const response = await authFetch(`${BASE_URL}/notes/`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", ...authHeaders() },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, content }),
   });
   return handleResponse(response);
 }
 
 export async function updateNote(id, title, content) {
-  const response = await fetch(`${BASE_URL}/notes/${id}`, {
+  const response = await authFetch(`${BASE_URL}/notes/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...authHeaders() },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, content }),
   });
   return handleResponse(response);
 }
 
 export async function deleteNote(id) {
-  const response = await fetch(`${BASE_URL}/notes/${id}`, {
+  const response = await authFetch(`${BASE_URL}/notes/${id}`, {
     method: "DELETE",
-    headers: authHeaders(),
   });
   return handleResponse(response);
 }
 
 // Admin
 export async function getAllUsers() {
-  const response = await fetch(`${BASE_URL}/admin/users`, {
-    headers: authHeaders(),
-  });
+  const response = await authFetch(`${BASE_URL}/admin/users`);
   return handleResponse(response);
 }
 
 export async function findUserByEmail(email) {
   const params = new URLSearchParams({ email });
-  const response = await fetch(`${BASE_URL}/admin/users/by-email?${params}`, {
-    headers: authHeaders(),
-  });
+  const response = await authFetch(`${BASE_URL}/admin/users/by-email?${params}`);
   return handleResponse(response);
 }
 
 export async function findUserByUsername(username) {
   const params = new URLSearchParams({ username });
-  const response = await fetch(`${BASE_URL}/admin/users/by-username?${params}`, {
-    headers: authHeaders(),
-  });
+  const response = await authFetch(`${BASE_URL}/admin/users/by-username?${params}`);
   return handleResponse(response);
 }
 
 export async function deleteUser(id) {
-  const response = await fetch(`${BASE_URL}/admin/users/${id}`, {
+  const response = await authFetch(`${BASE_URL}/admin/users/${id}`, {
     method: "DELETE",
-    headers: authHeaders(),
   });
   return handleResponse(response);
 }
