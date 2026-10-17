@@ -9,14 +9,18 @@ and a React frontend.
 
 DEPLOYMENT
 ----------
-This API is deployed on Railway.
-Swagger UI: https://notes-api-production-d765.up.railway.app/docs
+This API is deployed on Railway:
 
-Connect via POST /auth/login (use SUPERADMIN_EMAIL as username), or create your own account via POST /auth/register.
+* App: https://notes-api-production-d765.up.railway.app
+Create an account from the app, or sign in with GitHub
+
+* Swagger UI: https://notes-api-production-d765.up.railway.app/docs
+Connect via POST /auth/login or create your own account via POST /auth/register.
 
 FEATURES
 ----------
-* Register and login with JWT authentication
+BACKEND
+* Register and login with JWT authentication (access + refresh tokens)
 * Secure password hashing with bcrypt
 * OAuth2 password flow
 * Role-based access control (user / admin)
@@ -25,11 +29,11 @@ FEATURES
 * Password change requires current password verification
 * Admin: list users, search by email or username, delete accounts
 
-GITHUB AUTHENTICATION
-----------
-* Open in a browser (creates an account on first sign in):
-https://notes-api-production-d765.up.railway.app/auth/github/login
-* Returns an access token and a refresh token as JSON
+FRONTEND
+* Login, registration and GitHub sign in
+* Profile page: update username and email, change password, delete account
+* Admin page: list, search and delete users (visible to admins only)
+* Automatic access token refresh: users stay logged in without re-entering the password
 
 STACK
 ----------
@@ -110,8 +114,7 @@ ROADMAP
 * GitHub OAuth login
 * CI with GitHub Actions
 * React frontend (Vite)
+* GitHub login and automatic token refresh in the frontend
+* Frontend served by FastAPI
 
-FUTURE IMPROVEMENTS
-----------
-* Tests for Github OAuth 
 
