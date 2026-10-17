@@ -5,6 +5,7 @@ from app.core.dependencies import get_current_user
 from app.models.users import User
 from app.schemas.users import UserResponse, UserUpdate
 from app.core.security import hash_password, verify_password
+from app.repositories.user_repository import get_user_by_email, get_user_by_username
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -16,9 +17,19 @@ def get_me(current_user: User = Depends(get_current_user)):
 
 @router.patch("/me", response_model=UserResponse)
 def update_me(updated: UserUpdate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if updated.username:
+    if updated.username and updated.username != current_user.username:
+        if get_user_by_username(db, updated.username):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already taken",
+            )
         current_user.username = updated.username
-    if updated.email:
+    if updated.email and updated.email != current_user.email:
+        if get_user_by_email(db, updated.email):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered",
+            )
         current_user.email = updated.email
     if updated.password:
         if current_user.hashed_password is None:
