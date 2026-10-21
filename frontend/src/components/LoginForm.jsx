@@ -43,7 +43,7 @@ function LoginForm({ onLogin, onSwitch }) {
       <p className="divider">or</p>
 
       <a className="github-button" href={GITHUB_LOGIN_URL}>
-        <img src="/GitHub_Invertocat_Black.svg" alt="" />
+        <img src="/GitHub_Invertocat_White.svg" alt="" />
         Sign in with GitHub
       </a>
 
